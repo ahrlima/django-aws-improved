@@ -1,0 +1,498 @@
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8">
+    <title>Salary Insights Dashboard</title>
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <style>
+      :root {
+        color-scheme: light dark;
+        font-family: system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+        --bg: #0f172a;
+        --fg: #e2e8f0;
+        --accent: #38bdf8;
+        --card-bg: rgba(15, 23, 42, 0.65);
+      }
+      body {
+        margin: 0;
+        min-height: 100vh;
+        background: linear-gradient(135deg, rgba(15, 23, 42, 0.95), rgba(30, 64, 175, 0.9));
+        color: var(--fg);
+        display: flex;
+        flex-direction: column;
+        align-items: center;
+        padding: 48px 16px 64px;
+      }
+      header {
+        max-width: 960px;
+        width: 100%;
+        text-align: center;
+        margin-bottom: 32px;
+      }
+      h1 {
+        font-size: clamp(2rem, 4vw, 3rem);
+        margin-bottom: 12px;
+      }
+      p {
+        margin: 0;
+        color: rgba(226, 232, 240, 0.85);
+      }
+      main {
+        width: 100%;
+        max-width: 960px;
+        display: grid;
+        gap: 24px;
+      }
+      section {
+        background-color: var(--card-bg);
+        backdrop-filter: blur(16px);
+        border-radius: 18px;
+        padding: 24px;
+        box-shadow: 0 24px 48px rgba(15, 23, 42, 0.35);
+      }
+      section h2 {
+        margin-top: 0;
+        font-size: 1.4rem;
+      }
+      .controls {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(160px, 1fr));
+      }
+      label {
+        display: flex;
+        flex-direction: column;
+        gap: 6px;
+        font-weight: 600;
+        text-transform: uppercase;
+        font-size: 0.75rem;
+        letter-spacing: 0.08em;
+        color: rgba(226, 232, 240, 0.75);
+      }
+      input, select, button {
+        border-radius: 10px;
+        border: 1px solid rgba(148, 163, 184, 0.25);
+        background-color: rgba(15, 23, 42, 0.6);
+        color: var(--fg);
+        padding: 10px 12px;
+      }
+      input:focus, select:focus {
+        outline: 2px solid rgba(56, 189, 248, 0.6);
+      }
+      button {
+        cursor: pointer;
+        font-weight: 600;
+        letter-spacing: 0.05em;
+        transition: transform 0.2s ease, box-shadow 0.2s ease;
+      }
+      button:hover {
+        transform: translateY(-1px);
+        box-shadow: 0 12px 24px rgba(56, 189, 248, 0.35);
+      }
+      .grid {
+        display: grid;
+        gap: 16px;
+        grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+      }
+      .card {
+        border: 1px solid rgba(148, 163, 184, 0.18);
+        border-radius: 16px;
+        padding: 16px;
+        background-color: rgba(15, 23, 42, 0.6);
+      }
+      .card h3 {
+        margin: 0 0 8px;
+        font-size: 1rem;
+        color: var(--accent);
+        text-transform: uppercase;
+        letter-spacing: 0.08em;
+      }
+      .metric {
+        font-size: 1.8rem;
+        font-weight: 700;
+      }
+      .list {
+        display: grid;
+        gap: 12px;
+      }
+      .list-item {
+        display: flex;
+        justify-content: space-between;
+        align-items: center;
+      }
+      .list-item span {
+        font-size: 0.95rem;
+      }
+      footer {
+        margin-top: 48px;
+        color: rgba(226, 232, 240, 0.6);
+      }
+      .error {
+        margin-top: 12px;
+        color: #fda4af;
+      }
+      .loading {
+        margin-top: 12px;
+        color: rgba(226, 232, 240, 0.75);
+      }
+    </style>
+  </head>
+  <body>
+    <header>
+      <h1>Tech Salary Insights</h1>
+      <p>Explore Brazilian technology compensation trends using live data from the salary observation database.</p>
+    </header>
+
+    <main>
+      <section aria-labelledby="controls-title">
+        <h2 id="controls-title">Filters</h2>
+        <div class="controls">
+          <label>
+            Role *
+            <input id="input-role" name="role" placeholder="software_engineer" required>
+          </label>
+          <label>
+            State (UF)
+            <input id="input-state" name="state" placeholder="SP">
+          </label>
+          <label>
+            Work model
+            <select id="input-work-model" name="work_model">
+              <option value="">Any</option>
+              <option value="remoto">Remoto</option>
+              <option value="hibrido">Híbrido</option>
+              <option value="presencial">Presencial</option>
+            </select>
+          </label>
+          <label>
+            Seniority
+            <input id="input-level" name="level" placeholder="senior">
+          </label>
+        </div>
+        <div style="margin-top: 16px; display: flex; gap: 12px; flex-wrap: wrap;">
+          <button id="btn-refresh" type="button">Load Insights</button>
+          <div id="status" role="status"></div>
+        </div>
+        <div id="error" class="error" role="alert" hidden></div>
+      </section>
+
+      <section aria-labelledby="summary-title">
+        <h2 id="summary-title">Summary</h2>
+        <div class="grid" id="summary-grid">
+          <div class="card">
+            <h3>Observations</h3>
+            <div class="metric" id="metric-observations">—</div>
+          </div>
+          <div class="card">
+            <h3>Avg Total Comp</h3>
+            <div class="metric" id="metric-average-comp">—</div>
+          </div>
+          <div class="card">
+            <h3>Base Salary (Min / Max)</h3>
+            <div class="metric" id="metric-base-range">—</div>
+          </div>
+        </div>
+      </section>
+
+      <section aria-labelledby="percentiles-title">
+        <h2 id="percentiles-title">Percentiles</h2>
+        <div class="grid">
+          <div class="card">
+            <h3>25th Percentile</h3>
+            <div class="metric" id="metric-p25">—</div>
+          </div>
+          <div class="card">
+            <h3>Median</h3>
+            <div class="metric" id="metric-median">—</div>
+          </div>
+          <div class="card">
+            <h3>75th Percentile</h3>
+            <div class="metric" id="metric-p75">—</div>
+          </div>
+        </div>
+        <div class="card" style="margin-top: 16px;">
+          <canvas id="chart-percentiles" height="160" role="img" aria-label="Percentile distribution"></canvas>
+        </div>
+      </section>
+
+      <section aria-labelledby="top-states-title">
+        <h2 id="top-states-title">Top States</h2>
+        <div class="card" style="margin-bottom: 16px;">
+          <canvas id="chart-states" height="180" role="img" aria-label="Top states by compensation"></canvas>
+        </div>
+        <div class="list" id="list-states"></div>
+      </section>
+
+      <section aria-labelledby="top-locations-title">
+        <h2 id="top-locations-title">Top Cities / Locations</h2>
+        <div class="card" style="margin-bottom: 16px;">
+          <canvas id="chart-locations" height="180" role="img" aria-label="Top locations by compensation"></canvas>
+        </div>
+        <div class="list" id="list-locations"></div>
+      </section>
+
+      <section aria-labelledby="top-work-models-title">
+        <h2 id="top-work-models-title">Work Models</h2>
+        <div class="card" style="margin-bottom: 16px;">
+          <canvas id="chart-work-models" height="180" role="img" aria-label="Average compensation by work model"></canvas>
+        </div>
+        <div class="list" id="list-work-models"></div>
+      </section>
+
+      <section aria-labelledby="top-sources-title">
+        <h2 id="top-sources-title">Data Sources</h2>
+        <div class="list" id="list-sources"></div>
+      </section>
+    </main>
+
+    <footer>
+      Powered by Django, SQLite, and a database-first ingestion pipeline.
+    </footer>
+
+    <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+    <script>
+      const charts = {};
+
+      const destroyChart = (id) => {
+        if (charts[id]) {
+          charts[id].destroy();
+          delete charts[id];
+        }
+      };
+
+      const renderBarChart = (id, items, labelKey, currency = 'BRL') => {
+        const labels = items.map((item) => item[labelKey]);
+        const data = items.map((item) => item.average_total_compensation || 0);
+        const ctx = document.getElementById(id);
+        if (!ctx) return;
+
+        destroyChart(id);
+
+        charts[id] = new Chart(ctx, {
+          type: 'bar',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Average total compensation',
+                data,
+                backgroundColor: 'rgba(56, 189, 248, 0.6)',
+                borderColor: 'rgba(56, 189, 248, 1)',
+                borderWidth: 1.5,
+              }
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (context) => fmtCurrency(context.parsed.y, currency),
+                }
+              }
+            },
+            scales: {
+              y: {
+                ticks: {
+                  callback: (value) => fmtCurrency(value, currency),
+                  color: 'rgba(226, 232, 240, 0.7)',
+                },
+                grid: { color: 'rgba(148, 163, 184, 0.25)' }
+              },
+              x: {
+                ticks: { color: 'rgba(226, 232, 240, 0.7)' },
+                grid: { display: false }
+              }
+            }
+          }
+        });
+      };
+
+      const renderPercentileChart = (percentiles, currency = 'BRL') => {
+        const ctx = document.getElementById('chart-percentiles');
+        if (!ctx) return;
+        destroyChart('chart-percentiles');
+        const labels = ['P25', 'Median', 'P75'];
+        const data = [percentiles?.p25 || 0, percentiles?.median || 0, percentiles?.p75 || 0];
+        charts['chart-percentiles'] = new Chart(ctx, {
+          type: 'line',
+          data: {
+            labels,
+            datasets: [
+              {
+                label: 'Percentiles',
+                data,
+                fill: false,
+                borderColor: 'rgba(34, 211, 238, 0.9)',
+                backgroundColor: 'rgba(34, 211, 238, 0.9)',
+                tension: 0.35,
+                pointRadius: 5,
+              }
+            ],
+          },
+          options: {
+            responsive: true,
+            plugins: {
+              legend: { display: false },
+              tooltip: {
+                callbacks: {
+                  label: (context) => fmtCurrency(context.parsed.y, currency)
+                }
+              }
+            },
+            scales: {
+              y: {
+                ticks: { callback: (value) => fmtCurrency(value, currency), color: 'rgba(226, 232, 240, 0.7)' },
+                grid: { color: 'rgba(148, 163, 184, 0.2)' }
+              },
+              x: {
+                ticks: { color: 'rgba(226, 232, 240, 0.7)' },
+                grid: { display: false }
+              }
+            }
+          }
+        });
+      };
+      const fmtCurrency = (value, currency = 'BRL') => {
+        if (value === null || value === undefined) return '—';
+        try {
+          return new Intl.NumberFormat('pt-BR', {
+            style: 'currency',
+            currency,
+            maximumFractionDigits: 0
+          }).format(value);
+        } catch {
+          return `${value} ${currency}`;
+        }
+      };
+
+      const fmtNumber = (value) => value === null || value === undefined ? '—' : value.toLocaleString('pt-BR');
+
+      const statusEl = document.getElementById('status');
+      const errorEl = document.getElementById('error');
+
+      const setStatus = (message) => {
+        statusEl.textContent = message || '';
+        statusEl.className = message ? 'loading' : '';
+      };
+
+      const setError = (message) => {
+        if (message) {
+          errorEl.hidden = false;
+          errorEl.textContent = message;
+        } else {
+          errorEl.hidden = true;
+          errorEl.textContent = '';
+        }
+      };
+
+      const getFilters = () => {
+        return {
+          role: document.getElementById('input-role').value.trim(),
+          state: document.getElementById('input-state').value.trim(),
+          work_model: document.getElementById('input-work-model').value.trim(),
+          level: document.getElementById('input-level').value.trim()
+        };
+      };
+
+      const buildQuery = (filters) => {
+        const params = new URLSearchParams();
+        Object.entries(filters).forEach(([key, value]) => {
+          if (value) params.append(key, value);
+        });
+        return params.toString();
+      };
+
+      const updateSummary = (summary) => {
+        document.getElementById('metric-observations').textContent = fmtNumber(summary.total_observations);
+        const currencyBlock = summary.currencies?.[0]?.currency ?? 'BRL';
+        const avgBaseMin = summary.currencies?.[0]?.base_salary?.average_min ?? null;
+        const avgBaseMax = summary.currencies?.[0]?.base_salary?.average_max ?? null;
+        const avgTotal = summary.currencies?.[0]?.total_compensation?.average ?? null;
+        const baseMin = summary.currencies?.[0]?.base_salary?.min ?? null;
+        const baseMax = summary.currencies?.[0]?.base_salary?.max ?? null;
+        document.getElementById('metric-average-comp').textContent = fmtCurrency(avgTotal, currencyBlock);
+        document.getElementById('metric-base-range').textContent =
+          `${fmtCurrency(baseMin, currencyBlock)} ←→ ${fmtCurrency(baseMax, currencyBlock)}`;
+      };
+
+      const updatePercentiles = (insights, currency = 'BRL') => {
+        const { percentiles } = insights;
+        document.getElementById('metric-p25').textContent = fmtCurrency(percentiles?.p25, currency);
+        document.getElementById('metric-median').textContent = fmtCurrency(percentiles?.median, currency);
+        document.getElementById('metric-p75').textContent = fmtCurrency(percentiles?.p75, currency);
+        renderPercentileChart(percentiles, currency);
+      };
+
+      const updateList = (elementId, items, label) => {
+        const container = document.getElementById(elementId);
+        container.innerHTML = '';
+        if (!items || items.length === 0) {
+          container.innerHTML = '<div class="list-item"><span>No data</span></div>';
+          return;
+        }
+        items.forEach((item) => {
+          const el = document.createElement('div');
+          el.className = 'list-item';
+          const name = item[label];
+          const avg = item.average_total_compensation;
+          el.innerHTML = `<span>${name}</span><span>${fmtCurrency(avg)}</span>`;
+          container.appendChild(el);
+        });
+      };
+
+      const fetchInsights = async () => {
+        setError('');
+        const filters = getFilters();
+        if (!filters.role) {
+          setError('Please provide a role (e.g., software_engineer).');
+          return;
+        }
+        setStatus('Loading data from API…');
+        const query = buildQuery(filters);
+        try {
+          const [summaryRes, insightsRes] = await Promise.all([
+            fetch(`/api/salaries/?${query}`),
+            fetch(`/api/salaries/insights/?${query}`)
+          ]);
+          if (!summaryRes.ok) {
+            throw new Error((await summaryRes.json()).error || 'Failed to fetch summary');
+          }
+          if (!insightsRes.ok) {
+            throw new Error((await insightsRes.json()).error || 'Failed to fetch insights');
+          }
+          const summary = await summaryRes.json();
+          const insights = await insightsRes.json();
+          const currency = summary.currencies?.[0]?.currency ?? 'BRL';
+          updateSummary(summary);
+          updatePercentiles(insights, currency);
+          updateList('list-states', insights.top_states, 'state');
+          updateList('list-locations', insights.top_locations, 'location');
+          updateList('list-work-models', insights.top_work_models, 'work_model');
+          updateList('list-sources', insights.top_sources, 'source');
+          renderBarChart('chart-states', insights.top_states, 'state', currency);
+          renderBarChart('chart-locations', insights.top_locations, 'location', currency);
+          renderBarChart('chart-work-models', insights.top_work_models, 'work_model', currency);
+        } catch (error) {
+          console.error(error);
+          setError(error.message);
+        } finally {
+          setStatus('');
+        }
+      };
+
+      document.getElementById('btn-refresh').addEventListener('click', fetchInsights);
+      document.getElementById('input-role').addEventListener('keydown', (event) => {
+        if (event.key === 'Enter') {
+          fetchInsights();
+        }
+      });
+
+      // Prefill and auto-load example data for the first visit.
+      document.getElementById('input-role').value = 'software_engineer';
+      fetchInsights();
+    </script>
+  </body>
+</html>

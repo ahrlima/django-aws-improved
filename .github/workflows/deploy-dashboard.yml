@@ -1,0 +1,75 @@
+name: Deploy Dashboard
+
+on:
+  workflow_run:
+    workflows: ["Refresh Salary Dataset"]
+    types:
+      - completed
+
+permissions:
+  contents: read
+
+jobs:
+  deploy:
+    if: ${{ github.event.workflow_run.conclusion == 'success' }}
+    runs-on: ubuntu-latest
+    environment: salary-dashboard
+    env:
+      TARGET_ENV: dev
+      DASHBOARD_S3_BUCKET: ${{ secrets.DASHBOARD_S3_BUCKET }}
+      AWS_ROLE_TO_ASSUME: ${{ secrets.DASHBOARD_AWS_ROLE_ARN }}
+      AWS_REGION: ${{ secrets.DASHBOARD_AWS_REGION }}
+
+    steps:
+      - name: Download dashboard artifact
+        uses: actions/download-artifact@v4
+        with:
+          name: salary-dashboard
+          run-id: ${{ github.event.workflow_run.id }}
+          github-token: ${{ secrets.GITHUB_TOKEN }}
+          path: dist/dashboard
+
+      - name: Install AWS CLI
+        if: ${{ env.AWS_ROLE_TO_ASSUME != '' && env.AWS_REGION != '' }}
+        run: |
+          sudo apt-get update
+          sudo apt-get install -y awscli
+
+      - name: Configure AWS credentials
+        if: ${{ env.AWS_ROLE_TO_ASSUME != '' && env.AWS_REGION != '' }}
+        uses: aws-actions/configure-aws-credentials@v4
+        with:
+          role-to-assume: ${{ env.AWS_ROLE_TO_ASSUME }}
+          aws-region: ${{ env.AWS_REGION }}
+
+      - name: Resolve dashboard resources
+        if: ${{ env.AWS_ROLE_TO_ASSUME != '' && env.AWS_REGION != '' }}
+        run: |
+          STACK_NAME="AppStack-${TARGET_ENV}"
+          BUCKET_NAME=${DASHBOARD_S3_BUCKET}
+          if [ -z "${BUCKET_NAME}" ]; then
+            BUCKET_NAME=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='DashboardBucketName'].OutputValue" --output text)
+          fi
+          if [ "${BUCKET_NAME}" = "None" ]; then
+            echo "Dashboard bucket output not found in stack ${STACK_NAME}" >&2
+            exit 1
+          fi
+          DISTRIBUTION_ID=$(aws cloudformation describe-stacks --stack-name "$STACK_NAME" --query "Stacks[0].Outputs[?OutputKey=='DashboardDistributionId'].OutputValue" --output text)
+          echo "DASHBOARD_S3_BUCKET=${BUCKET_NAME}" >> "$GITHUB_ENV"
+          if [ "${DISTRIBUTION_ID}" != "None" ]; then
+            echo "DASHBOARD_CF_DISTRIBUTION_ID=${DISTRIBUTION_ID}" >> "$GITHUB_ENV"
+          fi
+
+      - name: Sync dashboard to S3
+        if: ${{ env.DASHBOARD_S3_BUCKET != '' && env.AWS_ROLE_TO_ASSUME != '' && env.AWS_REGION != '' }}
+        run: |
+          aws s3 sync dist/dashboard "s3://${DASHBOARD_S3_BUCKET}" --delete
+
+      - name: Invalidate CloudFront cache
+        if: ${{ env.DASHBOARD_CF_DISTRIBUTION_ID != '' && env.AWS_ROLE_TO_ASSUME != '' && env.AWS_REGION != '' }}
+        run: |
+          aws cloudfront create-invalidation --distribution-id "$DASHBOARD_CF_DISTRIBUTION_ID" --paths "/*"
+
+      - name: Skip deployment (missing secrets)
+        if: ${{ env.AWS_ROLE_TO_ASSUME == '' || env.AWS_REGION == '' }}
+        run: echo "Dashboard artifact downloaded. Configure DASHBOARD_AWS_ROLE_ARN and DASHBOARD_AWS_REGION secrets (and optionally DASHBOARD_S3_BUCKET) to enable automatic deployment."

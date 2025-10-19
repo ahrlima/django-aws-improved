@@ -1,0 +1,12 @@
+{
+  "sources": [
+    {
+      "name": "sample_salary_dataset",
+      "url": "https://example.com/path/to/salary_dataset.csv",
+      "dest": "external/sample_salary_dataset.csv",
+      "headers": {
+        "User-Agent": "salary-insights-ingestor/1.0"
+      }
+    }
+  ]
+}

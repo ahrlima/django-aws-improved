@@ -1,0 +1,23 @@
+source,role,level,location,state,country,currency,work_model,base_salary_min,base_salary_max,total_compensation
+glassdoor,software_engineer,junior,São Paulo,SP,Brazil,BRL,remoto,78000,102000,105000
+glassdoor,software_engineer,pleno,Campinas,SP,Brazil,BRL,hibrido,110000,145000,150000
+levels_fyi,software_engineer,senior,Florianópolis,SC,Brazil,BRL,presencial,150000,190000,205000
+levels_fyi,software_engineer,especialista,Porto Alegre,RS,Brazil,BRL,hibrido,190000,240000,255000
+salary_transparente,analista_de_sistemas,junior,São Paulo,SP,Brazil,BRL,presencial,55000,78000,78000
+salary_transparente,analista_de_sistemas,pleno,Belo Horizonte,MG,Brazil,BRL,hibrido,90000,115000,120000
+salary_transparente,analista_de_sistemas,senior,Curitiba,PR,Brazil,BRL,remoto,120000,150000,155000
+salary_transparente,analista_de_sistemas,especialista,Porto Alegre,RS,Brazil,BRL,remoto,150000,185000,190000
+levels_fyi,cloud_engineer,junior,Brasília,DF,Brazil,BRL,presencial,85000,110000,115000
+levels_fyi,cloud_engineer,pleno,São Paulo,SP,Brazil,BRL,hibrido,130000,165000,175000
+levels_fyi,cloud_engineer,senior,Recife,PE,Brazil,BRL,remoto,160000,210000,225000
+stack_overflow,devops_engineer,junior,Fortaleza,CE,Brazil,BRL,presencial,70000,90000,92000
+stack_overflow,devops_engineer,pleno,Porto Alegre,RS,Brazil,BRL,hibrido,110000,145000,150000
+stack_overflow,devops_engineer,senior,Remoto,Remote,Brazil,BRL,remoto,150000,195000,205000
+indeed,product_manager,junior,São Paulo,SP,Brazil,BRL,hibrido,95000,125000,130000
+indeed,product_manager,pleno,Curitiba,PR,Brazil,BRL,remoto,130000,170000,180000
+indeed,product_manager,senior,Remoto,Remote,Brazil,BRL,remoto,170000,220000,235000
+indeed,product_owner,junior,Recife,PE,Brazil,BRL,presencial,80000,105000,108000
+indeed,product_owner,pleno,Rio de Janeiro,RJ,Brazil,BRL,hibrido,110000,140000,150000
+indeed,product_owner,senior,Remoto,Remote,Brazil,BRL,remoto,140000,180000,190000
+glassdoor,data_scientist,pleno,São Paulo,SP,Brazil,BRL,hibrido,125000,165000,170000
+glassdoor,data_scientist,senior,Belo Horizonte,MG,Brazil,BRL,remoto,160000,210000,220000

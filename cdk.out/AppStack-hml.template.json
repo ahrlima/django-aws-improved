@@ -1,0 +1,1170 @@
+{
+ "Resources": {
+  "ObservabilityLogGroup43951639": {
+   "Type": "AWS::Logs::LogGroup",
+   "Properties": {
+    "LogGroupName": "/aws/django-ecs/hml-django-service-matific",
+    "RetentionInDays": 14,
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ]
+   },
+   "UpdateReplacePolicy": "Retain",
+   "DeletionPolicy": "Retain",
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Observability/LogGroup/Resource"
+   }
+  },
+  "ObservabilityAlarmTopicF724909D": {
+   "Type": "AWS::SNS::Topic",
+   "Properties": {
+    "DisplayName": "hml-django-sns-alarms-matific",
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "TopicName": "hml-django-sns-alarms-matific"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Observability/AlarmTopic/Resource"
+   }
+  },
+  "ObservabilityAlarmTopicalertshmlexamplecom2A06D9CA": {
+   "Type": "AWS::SNS::Subscription",
+   "Properties": {
+    "Endpoint": "alerts-hml@example.com",
+    "Protocol": "email",
+    "TopicArn": {
+     "Ref": "ObservabilityAlarmTopicF724909D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Observability/AlarmTopic/alerts-hml@example.com/Resource"
+   }
+  },
+  "ObservabilityCpuAlarmD3049700": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "ObservabilityAlarmTopicF724909D"
+     }
+    ],
+    "AlarmDescription": "CPU utilisation sustained above 80%",
+    "AlarmName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Fn::GetAtt": [
+         "EcsService5196398A",
+         "Name"
+        ]
+       },
+       "-cpu-utilization"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanThreshold",
+    "DatapointsToAlarm": 2,
+    "Dimensions": [
+     {
+      "Name": "ClusterName",
+      "Value": {
+       "Ref": "EcsClusterEAC0C105"
+      }
+     },
+     {
+      "Name": "ServiceName",
+      "Value": {
+       "Fn::GetAtt": [
+        "EcsService5196398A",
+        "Name"
+       ]
+      }
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "CPUUtilization",
+    "Namespace": "AWS/ECS",
+    "Period": 300,
+    "Statistic": "Average",
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "Threshold": 80,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Observability/CpuAlarm/Resource"
+   }
+  },
+  "ObservabilityMemoryAlarm5C99B872": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "ObservabilityAlarmTopicF724909D"
+     }
+    ],
+    "AlarmDescription": "Memory utilisation sustained above 80%",
+    "AlarmName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Fn::GetAtt": [
+         "EcsService5196398A",
+         "Name"
+        ]
+       },
+       "-memory-utilization"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanThreshold",
+    "DatapointsToAlarm": 2,
+    "Dimensions": [
+     {
+      "Name": "ClusterName",
+      "Value": {
+       "Ref": "EcsClusterEAC0C105"
+      }
+     },
+     {
+      "Name": "ServiceName",
+      "Value": {
+       "Fn::GetAtt": [
+        "EcsService5196398A",
+        "Name"
+       ]
+      }
+     }
+    ],
+    "EvaluationPeriods": 2,
+    "MetricName": "MemoryUtilization",
+    "Namespace": "AWS/ECS",
+    "Period": 300,
+    "Statistic": "Average",
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "Threshold": 80,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Observability/MemoryAlarm/Resource"
+   }
+  },
+  "ObservabilityAlb5xxAlarm752279DF": {
+   "Type": "AWS::CloudWatch::Alarm",
+   "Properties": {
+    "AlarmActions": [
+     {
+      "Ref": "ObservabilityAlarmTopicF724909D"
+     }
+    ],
+    "AlarmDescription": "ALB target group returning high rate of 5xx responses",
+    "AlarmName": {
+     "Fn::Join": [
+      "",
+      [
+       {
+        "Fn::GetAtt": [
+         "EcsAlb2F3BC407",
+         "LoadBalancerName"
+        ]
+       },
+       "-5xx"
+      ]
+     ]
+    },
+    "ComparisonOperator": "GreaterThanThreshold",
+    "DatapointsToAlarm": 1,
+    "Dimensions": [
+     {
+      "Name": "LoadBalancer",
+      "Value": {
+       "Fn::GetAtt": [
+        "EcsAlb2F3BC407",
+        "LoadBalancerFullName"
+       ]
+      }
+     }
+    ],
+    "EvaluationPeriods": 1,
+    "MetricName": "HTTPCode_Target_5XX_Count",
+    "Namespace": "AWS/ApplicationELB",
+    "Period": 300,
+    "Statistic": "Sum",
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "Threshold": 5,
+    "TreatMissingData": "notBreaching"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Observability/Alb5xxAlarm/Resource"
+   }
+  },
+  "EcsClusterEAC0C105": {
+   "Type": "AWS::ECS::Cluster",
+   "Properties": {
+    "ClusterName": "hml-django-ecs-cluster-matific",
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/Cluster/Resource"
+   }
+  },
+  "EcsServiceSecurityGroup60AD6E84": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for ECS service tasks",
+    "GroupName": "hml-django-sg-ecs-matific",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Fn::ImportValue": "NetworkStack-hml:ExportsOutputRefVpcC302751171D26A23"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/ServiceSecurityGroup/Resource"
+   }
+  },
+  "EcsServiceSecurityGroupfromAppStackhmlEcsAlbSecurityGroup086FF2B08000DFEF10FE": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Load balancer to target",
+    "FromPort": 8000,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "EcsServiceSecurityGroup60AD6E84",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "EcsAlbSecurityGroup86D66142",
+      "GroupId"
+     ]
+    },
+    "ToPort": 8000
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/ServiceSecurityGroup/from AppStackhmlEcsAlbSecurityGroup086FF2B0:8000"
+   }
+  },
+  "EcsTaskDefinitionTaskRole9E0C1BC3": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/TaskDefinition/TaskRole/Resource"
+   }
+  },
+  "EcsTaskDefinitionTaskRoleDefaultPolicy5EC10DF8": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": "rds-db:connect",
+       "Effect": "Allow",
+       "Resource": "arn:aws:rds-db:us-east-1:559384370552:dbuser:*/app_user"
+      },
+      {
+       "Action": "rds:GenerateDbAuthToken",
+       "Effect": "Allow",
+       "Resource": "*"
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "EcsTaskDefinitionTaskRoleDefaultPolicy5EC10DF8",
+    "Roles": [
+     {
+      "Ref": "EcsTaskDefinitionTaskRole9E0C1BC3"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/TaskDefinition/TaskRole/DefaultPolicy/Resource"
+   }
+  },
+  "EcsTaskDefinition02F34504": {
+   "Type": "AWS::ECS::TaskDefinition",
+   "Properties": {
+    "ContainerDefinitions": [
+     {
+      "Environment": [
+       {
+        "Name": "ENVIRONMENT",
+        "Value": "hml"
+       },
+       {
+        "Name": "AWS_REGION",
+        "Value": "us-east-1"
+       },
+       {
+        "Name": "DB_NAME",
+        "Value": "appdb"
+       },
+       {
+        "Name": "DB_USER",
+        "Value": "app_user"
+       },
+       {
+        "Name": "DB_HOST",
+        "Value": {
+         "Fn::ImportValue": "DataStack-hml:ExportsOutputFnGetAttRdsPostgres07D44B8FEndpointAddressCD0C0DEA"
+        }
+       }
+      ],
+      "Essential": true,
+      "Image": {
+       "Fn::Sub": "559384370552.dkr.ecr.us-east-1.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-559384370552-us-east-1:6282c1ba4be60f69af829291a4d926965c21e1f0fc90562b9fcafc81482a8473"
+      },
+      "LogConfiguration": {
+       "LogDriver": "awslogs",
+       "Options": {
+        "awslogs-group": {
+         "Ref": "ObservabilityLogGroup43951639"
+        },
+        "awslogs-stream-prefix": "hml-django-stream-matific",
+        "awslogs-region": "us-east-1"
+       }
+      },
+      "Name": "hml-django-container-matific",
+      "PortMappings": [
+       {
+        "ContainerPort": 8000,
+        "Protocol": "tcp"
+       }
+      ],
+      "Secrets": [
+       {
+        "Name": "DB_PASSWORD",
+        "ValueFrom": {
+         "Fn::Join": [
+          "",
+          [
+           {
+            "Fn::ImportValue": "DataStack-hml:ExportsOutputRefRdsPostgresSecretAttachment7FD3E63DD9020778"
+           },
+           ":password::"
+          ]
+         ]
+        }
+       }
+      ]
+     }
+    ],
+    "Cpu": "512",
+    "ExecutionRoleArn": {
+     "Fn::GetAtt": [
+      "EcsTaskDefinitionExecutionRole6C4B4851",
+      "Arn"
+     ]
+    },
+    "Family": "AppStackhmlEcsTaskDefinition2AAD5089",
+    "Memory": "1024",
+    "NetworkMode": "awsvpc",
+    "RequiresCompatibilities": [
+     "FARGATE"
+    ],
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "TaskRoleArn": {
+     "Fn::GetAtt": [
+      "EcsTaskDefinitionTaskRole9E0C1BC3",
+      "Arn"
+     ]
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/TaskDefinition/Resource"
+   }
+  },
+  "EcsTaskDefinitionExecutionRole6C4B4851": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ecs-tasks.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/TaskDefinition/ExecutionRole/Resource"
+   }
+  },
+  "EcsTaskDefinitionExecutionRoleDefaultPolicyBF2B1E6E": {
+   "Type": "AWS::IAM::Policy",
+   "Properties": {
+    "PolicyDocument": {
+     "Statement": [
+      {
+       "Action": [
+        "ecr:BatchCheckLayerAvailability",
+        "ecr:GetDownloadUrlForLayer",
+        "ecr:BatchGetImage"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::Join": [
+         "",
+         [
+          "arn:",
+          {
+           "Ref": "AWS::Partition"
+          },
+          ":ecr:us-east-1:559384370552:repository/cdk-hnb659fds-container-assets-559384370552-us-east-1"
+         ]
+        ]
+       }
+      },
+      {
+       "Action": "ecr:GetAuthorizationToken",
+       "Effect": "Allow",
+       "Resource": "*"
+      },
+      {
+       "Action": [
+        "logs:CreateLogStream",
+        "logs:PutLogEvents"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::GetAtt": [
+         "ObservabilityLogGroup43951639",
+         "Arn"
+        ]
+       }
+      },
+      {
+       "Action": [
+        "secretsmanager:GetSecretValue",
+        "secretsmanager:DescribeSecret"
+       ],
+       "Effect": "Allow",
+       "Resource": {
+        "Fn::ImportValue": "DataStack-hml:ExportsOutputRefRdsPostgresSecretAttachment7FD3E63DD9020778"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "PolicyName": "EcsTaskDefinitionExecutionRoleDefaultPolicyBF2B1E6E",
+    "Roles": [
+     {
+      "Ref": "EcsTaskDefinitionExecutionRole6C4B4851"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/TaskDefinition/ExecutionRole/DefaultPolicy/Resource"
+   }
+  },
+  "EcsService5196398A": {
+   "Type": "AWS::ECS::Service",
+   "Properties": {
+    "Cluster": {
+     "Ref": "EcsClusterEAC0C105"
+    },
+    "DeploymentConfiguration": {
+     "Alarms": {
+      "AlarmNames": [],
+      "Enable": false,
+      "Rollback": false
+     },
+     "DeploymentCircuitBreaker": {
+      "Enable": true,
+      "Rollback": true
+     },
+     "MaximumPercent": 200,
+     "MinimumHealthyPercent": 50
+    },
+    "DeploymentController": {
+     "Type": "ECS"
+    },
+    "DesiredCount": 2,
+    "EnableECSManagedTags": false,
+    "HealthCheckGracePeriodSeconds": 60,
+    "LaunchType": "FARGATE",
+    "LoadBalancers": [
+     {
+      "ContainerName": "hml-django-container-matific",
+      "ContainerPort": 8000,
+      "TargetGroupArn": {
+       "Ref": "EcsAlbHttpListenerHttpTargetGroup0DB0BC12"
+      }
+     }
+    ],
+    "NetworkConfiguration": {
+     "AwsvpcConfiguration": {
+      "AssignPublicIp": "DISABLED",
+      "SecurityGroups": [
+       {
+        "Fn::GetAtt": [
+         "EcsServiceSecurityGroup60AD6E84",
+         "GroupId"
+        ]
+       }
+      ],
+      "Subnets": [
+       {
+        "Fn::ImportValue": "NetworkStack-hml:ExportsOutputRefVpchmldjangosubnetprivatematificSubnet1Subnet3AD4D28F175E1636"
+       },
+       {
+        "Fn::ImportValue": "NetworkStack-hml:ExportsOutputRefVpchmldjangosubnetprivatematificSubnet2SubnetA74A5D00494652B2"
+       }
+      ]
+     }
+    },
+    "ServiceName": "hml-django-service-matific",
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "TaskDefinition": {
+     "Ref": "EcsTaskDefinition02F34504"
+    }
+   },
+   "DependsOn": [
+    "EcsAlbHttpListenerHttpTargetGroup0DB0BC12",
+    "EcsAlbHttpListenerC33B5A5D",
+    "EcsTaskDefinitionTaskRoleDefaultPolicy5EC10DF8",
+    "EcsTaskDefinitionTaskRole9E0C1BC3"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/Service/Service"
+   }
+  },
+  "EcsServiceTaskCountTarget9267F137": {
+   "Type": "AWS::ApplicationAutoScaling::ScalableTarget",
+   "Properties": {
+    "MaxCapacity": 6,
+    "MinCapacity": 1,
+    "ResourceId": {
+     "Fn::Join": [
+      "",
+      [
+       "service/",
+       {
+        "Ref": "EcsClusterEAC0C105"
+       },
+       "/",
+       {
+        "Fn::GetAtt": [
+         "EcsService5196398A",
+         "Name"
+        ]
+       }
+      ]
+     ]
+    },
+    "RoleARN": {
+     "Fn::Join": [
+      "",
+      [
+       "arn:",
+       {
+        "Ref": "AWS::Partition"
+       },
+       ":iam::559384370552:role/aws-service-role/ecs.application-autoscaling.amazonaws.com/AWSServiceRoleForApplicationAutoScaling_ECSService"
+      ]
+     ]
+    },
+    "ScalableDimension": "ecs:service:DesiredCount",
+    "ServiceNamespace": "ecs"
+   },
+   "DependsOn": [
+    "EcsTaskDefinitionTaskRoleDefaultPolicy5EC10DF8",
+    "EcsTaskDefinitionTaskRole9E0C1BC3"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/Service/TaskCount/Target/Resource"
+   }
+  },
+  "EcsServiceTaskCountTargetCpuScaling98454E2F": {
+   "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+   "Properties": {
+    "PolicyName": "AppStackhmlEcsServiceTaskCountTargetCpuScalingD017B59B",
+    "PolicyType": "TargetTrackingScaling",
+    "ScalingTargetId": {
+     "Ref": "EcsServiceTaskCountTarget9267F137"
+    },
+    "TargetTrackingScalingPolicyConfiguration": {
+     "PredefinedMetricSpecification": {
+      "PredefinedMetricType": "ECSServiceAverageCPUUtilization"
+     },
+     "ScaleInCooldown": 60,
+     "ScaleOutCooldown": 60,
+     "TargetValue": 60
+    }
+   },
+   "DependsOn": [
+    "EcsTaskDefinitionTaskRoleDefaultPolicy5EC10DF8",
+    "EcsTaskDefinitionTaskRole9E0C1BC3"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/Service/TaskCount/Target/CpuScaling/Resource"
+   }
+  },
+  "EcsServiceTaskCountTargetMemoryScaling183AF761": {
+   "Type": "AWS::ApplicationAutoScaling::ScalingPolicy",
+   "Properties": {
+    "PolicyName": "AppStackhmlEcsServiceTaskCountTargetMemoryScaling5EBFB46A",
+    "PolicyType": "TargetTrackingScaling",
+    "ScalingTargetId": {
+     "Ref": "EcsServiceTaskCountTarget9267F137"
+    },
+    "TargetTrackingScalingPolicyConfiguration": {
+     "PredefinedMetricSpecification": {
+      "PredefinedMetricType": "ECSServiceAverageMemoryUtilization"
+     },
+     "ScaleInCooldown": 120,
+     "ScaleOutCooldown": 60,
+     "TargetValue": 60
+    }
+   },
+   "DependsOn": [
+    "EcsTaskDefinitionTaskRoleDefaultPolicy5EC10DF8",
+    "EcsTaskDefinitionTaskRole9E0C1BC3"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/Service/TaskCount/Target/MemoryScaling/Resource"
+   }
+  },
+  "EcsAlb2F3BC407": {
+   "Type": "AWS::ElasticLoadBalancingV2::LoadBalancer",
+   "Properties": {
+    "LoadBalancerAttributes": [
+     {
+      "Key": "deletion_protection.enabled",
+      "Value": "false"
+     }
+    ],
+    "Name": "hml-django-alb-matific",
+    "Scheme": "internet-facing",
+    "SecurityGroups": [
+     {
+      "Fn::GetAtt": [
+       "EcsAlbSecurityGroup86D66142",
+       "GroupId"
+      ]
+     }
+    ],
+    "Subnets": [
+     {
+      "Fn::ImportValue": "NetworkStack-hml:ExportsOutputRefVpchmldjangosubnetpublicmatificSubnet1Subnet8AE8593FC2E35FED"
+     },
+     {
+      "Fn::ImportValue": "NetworkStack-hml:ExportsOutputRefVpchmldjangosubnetpublicmatificSubnet2SubnetBAF8533940DFA735"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "Type": "application"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/Alb/Resource"
+   }
+  },
+  "EcsAlbSecurityGroup86D66142": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Automatically created Security Group for ELB AppStackhmlEcsAlbB0EB8FFB",
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow from anyone on port 80",
+      "FromPort": 80,
+      "IpProtocol": "tcp",
+      "ToPort": 80
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Fn::ImportValue": "NetworkStack-hml:ExportsOutputRefVpcC302751171D26A23"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/Alb/SecurityGroup/Resource"
+   }
+  },
+  "EcsAlbSecurityGrouptoAppStackhmlEcsServiceSecurityGroupDF1D22188000137C4FC2": {
+   "Type": "AWS::EC2::SecurityGroupEgress",
+   "Properties": {
+    "Description": "Load balancer to target",
+    "DestinationSecurityGroupId": {
+     "Fn::GetAtt": [
+      "EcsServiceSecurityGroup60AD6E84",
+      "GroupId"
+     ]
+    },
+    "FromPort": 8000,
+    "GroupId": {
+     "Fn::GetAtt": [
+      "EcsAlbSecurityGroup86D66142",
+      "GroupId"
+     ]
+    },
+    "IpProtocol": "tcp",
+    "ToPort": 8000
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/Alb/SecurityGroup/to AppStackhmlEcsServiceSecurityGroupDF1D2218:8000"
+   }
+  },
+  "EcsAlbHttpListenerC33B5A5D": {
+   "Type": "AWS::ElasticLoadBalancingV2::Listener",
+   "Properties": {
+    "DefaultActions": [
+     {
+      "TargetGroupArn": {
+       "Ref": "EcsAlbHttpListenerHttpTargetGroup0DB0BC12"
+      },
+      "Type": "forward"
+     }
+    ],
+    "LoadBalancerArn": {
+     "Ref": "EcsAlb2F3BC407"
+    },
+    "Port": 80,
+    "Protocol": "HTTP"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/Alb/HttpListener/Resource"
+   }
+  },
+  "EcsAlbHttpListenerHttpTargetGroup0DB0BC12": {
+   "Type": "AWS::ElasticLoadBalancingV2::TargetGroup",
+   "Properties": {
+    "HealthCheckPath": "/healthz",
+    "Name": "hml-django-alb-target-matific",
+    "Port": 8000,
+    "Protocol": "HTTP",
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "restricted"
+     },
+     {
+      "Key": "Environment",
+      "Value": "hml"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "TargetGroupAttributes": [
+     {
+      "Key": "stickiness.enabled",
+      "Value": "false"
+     }
+    ],
+    "TargetType": "ip",
+    "VpcId": {
+     "Fn::ImportValue": "NetworkStack-hml:ExportsOutputRefVpcC302751171D26A23"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/Alb/HttpListener/HttpTargetGroup/Resource"
+   }
+  },
+  "EcsDbIngress0C406D68D": {
+   "Type": "AWS::EC2::SecurityGroupIngress",
+   "Properties": {
+    "Description": "Allow ECS tasks to reach PostgreSQL",
+    "FromPort": 5432,
+    "GroupId": {
+     "Fn::ImportValue": "DataStack-hml:ExportsOutputFnGetAttRdsPostgresSecurityGroupE501963FGroupId19A4CA18"
+    },
+    "IpProtocol": "tcp",
+    "SourceSecurityGroupId": {
+     "Fn::GetAtt": [
+      "EcsServiceSecurityGroup60AD6E84",
+      "GroupId"
+     ]
+    },
+    "ToPort": 5432
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/Ecs/DbIngress0"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/32SwW7bMAyGn6V3RWsN9LBjmm5DgQIb4twLhmY11opkiFKCQNC7D5bjxtmAnfjzI0X+ltzoh8dG39/BSVbY9SvLe53bCNgrOMlbtt6Izq/e/Ag+DWrz7mZdlDjReecHxpFPok17wcBDZO9GusyLQutTd4KIv3VeWwiHsaWKogjDG4hQFP3ssafwcgBD65GMNb2lwQtHH85PIKQIReeNTRIpjFNm+R2CgUg7kP6Z3tnx7ORv4l0EdhQW7HK2pXBkpGr/IlsEC3tbx258cnH02+jcEqbA8fx5O/8HL84EEvmHf6u4KIaDzltv6+4af3nLeB7TSRUFw2AZYTQMKXpBsOyMzleLwVCsK27JFHYBsGdn2uncdf4NKIosSGS0Hro9WHDIzhwbndfX9a8euqdam57gJl/2sURyl55ZL+qTsc8bW6SlqPoDtBEMO6O2JD6F6Wl+pjik+p0zLcr5jvSHfDk29/rhq368+xDmVUgu8oH0dop/AGsL8LnzAgAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "AppStack-hml/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "AlbDnsName": {
+   "Value": {
+    "Fn::GetAtt": [
+     "EcsAlb2F3BC407",
+     "DNSName"
+    ]
+   }
+  },
+  "RdsEndpoint": {
+   "Value": {
+    "Fn::ImportValue": "DataStack-hml:ExportsOutputFnGetAttRdsPostgres07D44B8FEndpointAddressCD0C0DEA"
+   }
+  },
+  "EcrRepositoryUri": {
+   "Value": {
+    "Fn::Join": [
+     "",
+     [
+      "559384370552.dkr.ecr.us-east-1.",
+      {
+       "Ref": "AWS::URLSuffix"
+      },
+      "/cdk-hnb659fds-container-assets-559384370552-us-east-1"
+     ]
+    ]
+   }
+  },
+  "AppImageUri": {
+   "Value": {
+    "Fn::Sub": "559384370552.dkr.ecr.us-east-1.${AWS::URLSuffix}/cdk-hnb659fds-container-assets-559384370552-us-east-1:6282c1ba4be60f69af829291a4d926965c21e1f0fc90562b9fcafc81482a8473"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}

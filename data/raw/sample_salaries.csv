@@ -1,0 +1,6 @@
+source,role,level,city,state,country,currency,work_model,salary_min,salary_max,salary_total
+levels_fyi,software engineer,senior,Florianópolis,SC,Brazil,BRL,remoto,150000,190000,205000
+glassdoor,devops engineer,pleno,São Paulo,SP,Brazil,BRL,hibrido,110000,145000,150000
+glassdoor,data scientist,senior,Belo Horizonte,MG,Brazil,BRL,remoto,165000,210000,220000
+indeed,product owner,junior,Recife,PE,Brazil,BRL,presencial,80000,105000,108000
+salary_transparente,analista de sistemas,pleno,Belo Horizonte,MG,Brazil,BRL,hibrido,92000,118000,122000

@@ -1,0 +1,836 @@
+{
+ "Resources": {
+  "VpcC3027511": {
+   "Type": "AWS::EC2::VPC",
+   "Properties": {
+    "CidrBlock": "10.10.0.0/16",
+    "EnableDnsHostnames": true,
+    "EnableDnsSupport": true,
+    "InstanceTenancy": "default",
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "dev-djg-vpc-ander"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/Resource"
+   }
+  },
+  "VpcdevdjgsubnetpublicanderSubnet1Subnet1618B0D3": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.10.0.0/26",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "dev-djg-subnet-public-ander"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VpcC3027511"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet1/Subnet"
+   }
+  },
+  "VpcdevdjgsubnetpublicanderSubnet1RouteTable16651EE3": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VpcC3027511"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet1/RouteTable"
+   }
+  },
+  "VpcdevdjgsubnetpublicanderSubnet1RouteTableAssociation2F4EDDBF": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VpcdevdjgsubnetpublicanderSubnet1RouteTable16651EE3"
+    },
+    "SubnetId": {
+     "Ref": "VpcdevdjgsubnetpublicanderSubnet1Subnet1618B0D3"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet1/RouteTableAssociation"
+   }
+  },
+  "VpcdevdjgsubnetpublicanderSubnet1DefaultRoute5FF85380": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "VpcIGW488B0FEB"
+    },
+    "RouteTableId": {
+     "Ref": "VpcdevdjgsubnetpublicanderSubnet1RouteTable16651EE3"
+    }
+   },
+   "DependsOn": [
+    "VpcVPCGW42EC8516"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet1/DefaultRoute"
+   }
+  },
+  "VpcdevdjgsubnetpublicanderSubnet2Subnet70A4ACFD": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.10.0.64/26",
+    "MapPublicIpOnLaunch": true,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "dev-djg-subnet-public-ander"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Public"
+     },
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VpcC3027511"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet2/Subnet"
+   }
+  },
+  "VpcdevdjgsubnetpublicanderSubnet2RouteTable46BDA3E6": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VpcC3027511"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet2/RouteTable"
+   }
+  },
+  "VpcdevdjgsubnetpublicanderSubnet2RouteTableAssociation716AB49C": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VpcdevdjgsubnetpublicanderSubnet2RouteTable46BDA3E6"
+    },
+    "SubnetId": {
+     "Ref": "VpcdevdjgsubnetpublicanderSubnet2Subnet70A4ACFD"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet2/RouteTableAssociation"
+   }
+  },
+  "VpcdevdjgsubnetpublicanderSubnet2DefaultRoute70689183": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "GatewayId": {
+     "Ref": "VpcIGW488B0FEB"
+    },
+    "RouteTableId": {
+     "Ref": "VpcdevdjgsubnetpublicanderSubnet2RouteTable46BDA3E6"
+    }
+   },
+   "DependsOn": [
+    "VpcVPCGW42EC8516"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-public-anderSubnet2/DefaultRoute"
+   }
+  },
+  "VpcdevdjgsubnetprivateanderSubnet1Subnet2B5E9E7D": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "CidrBlock": "10.10.4.0/22",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "dev-djg-subnet-private-ander"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-private-anderSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VpcC3027511"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-private-anderSubnet1/Subnet"
+   }
+  },
+  "VpcdevdjgsubnetprivateanderSubnet1RouteTableB5142920": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-private-anderSubnet1"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VpcC3027511"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-private-anderSubnet1/RouteTable"
+   }
+  },
+  "VpcdevdjgsubnetprivateanderSubnet1RouteTableAssociationEF5DF94E": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VpcdevdjgsubnetprivateanderSubnet1RouteTableB5142920"
+    },
+    "SubnetId": {
+     "Ref": "VpcdevdjgsubnetprivateanderSubnet1Subnet2B5E9E7D"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-private-anderSubnet1/RouteTableAssociation"
+   }
+  },
+  "VpcdevdjgsubnetprivateanderSubnet2Subnet511EBA99": {
+   "Type": "AWS::EC2::Subnet",
+   "Properties": {
+    "AvailabilityZone": "us-east-1b",
+    "CidrBlock": "10.10.8.0/22",
+    "MapPublicIpOnLaunch": false,
+    "Tags": [
+     {
+      "Key": "aws-cdk:subnet-name",
+      "Value": "dev-djg-subnet-private-ander"
+     },
+     {
+      "Key": "aws-cdk:subnet-type",
+      "Value": "Private"
+     },
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-private-anderSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VpcC3027511"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-private-anderSubnet2/Subnet"
+   }
+  },
+  "VpcdevdjgsubnetprivateanderSubnet2RouteTable6B994477": {
+   "Type": "AWS::EC2::RouteTable",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-private-anderSubnet2"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VpcC3027511"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-private-anderSubnet2/RouteTable"
+   }
+  },
+  "VpcdevdjgsubnetprivateanderSubnet2RouteTableAssociation08992969": {
+   "Type": "AWS::EC2::SubnetRouteTableAssociation",
+   "Properties": {
+    "RouteTableId": {
+     "Ref": "VpcdevdjgsubnetprivateanderSubnet2RouteTable6B994477"
+    },
+    "SubnetId": {
+     "Ref": "VpcdevdjgsubnetprivateanderSubnet2Subnet511EBA99"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/dev-djg-subnet-private-anderSubnet2/RouteTableAssociation"
+   }
+  },
+  "VpcIGW488B0FEB": {
+   "Type": "AWS::EC2::InternetGateway",
+   "Properties": {
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "dev-djg-vpc-ander"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/IGW"
+   }
+  },
+  "VpcVPCGW42EC8516": {
+   "Type": "AWS::EC2::VPCGatewayAttachment",
+   "Properties": {
+    "InternetGatewayId": {
+     "Ref": "VpcIGW488B0FEB"
+    },
+    "VpcId": {
+     "Ref": "VpcC3027511"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/Vpc/Vpc/VPCGW"
+   }
+  },
+  "NatInstanceNatSecurityGroup797A62EF": {
+   "Type": "AWS::EC2::SecurityGroup",
+   "Properties": {
+    "GroupDescription": "Security group for NAT instance (prefer SSM over SSH).",
+    "GroupName": "dev-djg-sg-nat-ander",
+    "SecurityGroupEgress": [
+     {
+      "CidrIp": "0.0.0.0/0",
+      "Description": "Allow all outbound traffic by default",
+      "IpProtocol": "-1"
+     }
+    ],
+    "SecurityGroupIngress": [
+     {
+      "CidrIp": {
+       "Fn::GetAtt": [
+        "VpcC3027511",
+        "CidrBlock"
+       ]
+      },
+      "Description": "Allow private subnets to route through NAT",
+      "IpProtocol": "-1"
+     }
+    ],
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "VpcId": {
+     "Ref": "VpcC3027511"
+    }
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/NatInstance/NatSecurityGroup/Resource"
+   }
+  },
+  "NatInstanceNatInstanceRole707A9AF2": {
+   "Type": "AWS::IAM::Role",
+   "Properties": {
+    "AssumeRolePolicyDocument": {
+     "Statement": [
+      {
+       "Action": "sts:AssumeRole",
+       "Effect": "Allow",
+       "Principal": {
+        "Service": "ec2.amazonaws.com"
+       }
+      }
+     ],
+     "Version": "2012-10-17"
+    },
+    "ManagedPolicyArns": [
+     {
+      "Fn::Join": [
+       "",
+       [
+        "arn:",
+        {
+         "Ref": "AWS::Partition"
+        },
+        ":iam::aws:policy/AmazonSSMManagedInstanceCore"
+       ]
+      ]
+     }
+    ],
+    "RoleName": "dev-djg-role-nat-ander",
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/NatInstance/NatInstanceRole/Resource"
+   }
+  },
+  "NatInstanceInstanceProfile6C16E29B": {
+   "Type": "AWS::IAM::InstanceProfile",
+   "Properties": {
+    "Roles": [
+     {
+      "Ref": "NatInstanceNatInstanceRole707A9AF2"
+     }
+    ]
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/NatInstance/NatInstance/InstanceProfile"
+   }
+  },
+  "NatInstance8121261A": {
+   "Type": "AWS::EC2::Instance",
+   "Properties": {
+    "AvailabilityZone": "us-east-1a",
+    "IamInstanceProfile": {
+     "Ref": "NatInstanceInstanceProfile6C16E29B"
+    },
+    "ImageId": "ami-0c6af08c0ba3009fa",
+    "InstanceType": "t3.micro",
+    "SecurityGroupIds": [
+     {
+      "Fn::GetAtt": [
+       "NatInstanceNatSecurityGroup797A62EF",
+       "GroupId"
+      ]
+     }
+    ],
+    "SourceDestCheck": false,
+    "SubnetId": {
+     "Ref": "VpcdevdjgsubnetpublicanderSubnet1Subnet1618B0D3"
+    },
+    "Tags": [
+     {
+      "Key": "Confidentiality",
+      "Value": "internal"
+     },
+     {
+      "Key": "Environment",
+      "Value": "dev"
+     },
+     {
+      "Key": "ManagedBy",
+      "Value": "cdk"
+     },
+     {
+      "Key": "Name",
+      "Value": "dev-djg-nat-ander"
+     },
+     {
+      "Key": "Owner",
+      "Value": "platform-team"
+     },
+     {
+      "Key": "Project",
+      "Value": "django-ecs"
+     }
+    ],
+    "UserData": {
+     "Fn::Base64": "#!/bin/bash\nset -xe\nyum install -y iptables-services\nsystemctl enable iptables\nsysctl -w net.ipv4.ip_forward=1\nsed -i '/^net.ipv4.ip_forward/d' /etc/sysctl.conf\necho 'net.ipv4.ip_forward = 1' >> /etc/sysctl.conf\niptables -t nat -F\niptables -F\niptables -t nat -A POSTROUTING -o eth0 -j MASQUERADE\niptables -A FORWARD -i eth0 -o eth0 -m state --state RELATED,ESTABLISHED -j ACCEPT\niptables -A FORWARD -i eth0 -o eth0 -j ACCEPT\nservice iptables save"
+    }
+   },
+   "DependsOn": [
+    "NatInstanceNatInstanceRole707A9AF2"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/NatInstance/NatInstance/Resource"
+   }
+  },
+  "NatInstanceNatInstanceDefaultRoute026D72C8C": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "InstanceId": {
+     "Ref": "NatInstance8121261A"
+    },
+    "RouteTableId": {
+     "Ref": "VpcdevdjgsubnetprivateanderSubnet1RouteTableB5142920"
+    }
+   },
+   "DependsOn": [
+    "NatInstanceInstanceProfile6C16E29B",
+    "NatInstance8121261A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/NatInstance/NatInstanceDefaultRoute0"
+   }
+  },
+  "NatInstanceNatInstanceDefaultRoute13FF6DD38": {
+   "Type": "AWS::EC2::Route",
+   "Properties": {
+    "DestinationCidrBlock": "0.0.0.0/0",
+    "InstanceId": {
+     "Ref": "NatInstance8121261A"
+    },
+    "RouteTableId": {
+     "Ref": "VpcdevdjgsubnetprivateanderSubnet2RouteTable6B994477"
+    }
+   },
+   "DependsOn": [
+    "NatInstanceInstanceProfile6C16E29B",
+    "NatInstance8121261A"
+   ],
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/NatInstance/NatInstanceDefaultRoute1"
+   }
+  },
+  "CDKMetadata": {
+   "Type": "AWS::CDK::Metadata",
+   "Properties": {
+    "Analytics": "v2:deflate64:H4sIAAAAAAAA/1WPTW/CMAyGfwv3NINKPeyIOCBOq1rEdXKD0QytUyU2Far636cthYrT+/rxd243RW7XKxhi5s63rKXGjrWAuxkY4veILrfjqXdmd+FTuTOlNi25WhtG+WOLq7wKHqFpceEL28boHYGQ51exKQPdQXCZcWDBwCh7EBzgMS+do60IuJ8OWUyNTgPJYx+89v/r3sCBowA7TCOTnwxBZ8fKp/ue+kyXwV+oxWkyFUavITV/qfSavpvpZNif0V7jxz1f282nLVbXSJQFZaEObZX0F2Rux+5XAQAA"
+   },
+   "Metadata": {
+    "aws:cdk:path": "NetworkStack-dev/CDKMetadata/Default"
+   }
+  }
+ },
+ "Outputs": {
+  "NatInstanceNatInstancePublicIp4AF91B84": {
+   "Description": "Public IP of the NAT instance",
+   "Value": {
+    "Fn::GetAtt": [
+     "NatInstance8121261A",
+     "PublicIp"
+    ]
+   }
+  },
+  "ExportsOutputRefVpcdevdjgsubnetprivateanderSubnet1Subnet2B5E9E7D521758FF": {
+   "Value": {
+    "Ref": "VpcdevdjgsubnetprivateanderSubnet1Subnet2B5E9E7D"
+   },
+   "Export": {
+    "Name": "NetworkStack-dev:ExportsOutputRefVpcdevdjgsubnetprivateanderSubnet1Subnet2B5E9E7D521758FF"
+   }
+  },
+  "ExportsOutputRefVpcdevdjgsubnetprivateanderSubnet2Subnet511EBA996996E671": {
+   "Value": {
+    "Ref": "VpcdevdjgsubnetprivateanderSubnet2Subnet511EBA99"
+   },
+   "Export": {
+    "Name": "NetworkStack-dev:ExportsOutputRefVpcdevdjgsubnetprivateanderSubnet2Subnet511EBA996996E671"
+   }
+  },
+  "ExportsOutputRefVpcC302751171D26A23": {
+   "Value": {
+    "Ref": "VpcC3027511"
+   },
+   "Export": {
+    "Name": "NetworkStack-dev:ExportsOutputRefVpcC302751171D26A23"
+   }
+  },
+  "ExportsOutputRefVpcdevdjgsubnetpublicanderSubnet1Subnet1618B0D3A1C1B00E": {
+   "Value": {
+    "Ref": "VpcdevdjgsubnetpublicanderSubnet1Subnet1618B0D3"
+   },
+   "Export": {
+    "Name": "NetworkStack-dev:ExportsOutputRefVpcdevdjgsubnetpublicanderSubnet1Subnet1618B0D3A1C1B00E"
+   }
+  },
+  "ExportsOutputRefVpcdevdjgsubnetpublicanderSubnet2Subnet70A4ACFD8CC85AD8": {
+   "Value": {
+    "Ref": "VpcdevdjgsubnetpublicanderSubnet2Subnet70A4ACFD"
+   },
+   "Export": {
+    "Name": "NetworkStack-dev:ExportsOutputRefVpcdevdjgsubnetpublicanderSubnet2Subnet70A4ACFD8CC85AD8"
+   }
+  }
+ },
+ "Parameters": {
+  "BootstrapVersion": {
+   "Type": "AWS::SSM::Parameter::Value<String>",
+   "Default": "/cdk-bootstrap/hnb659fds/version",
+   "Description": "Version of the CDK Bootstrap resources in this environment, automatically retrieved from SSM Parameter Store. [cdk:skip]"
+  }
+ },
+ "Rules": {
+  "CheckBootstrapVersion": {
+   "Assertions": [
+    {
+     "Assert": {
+      "Fn::Not": [
+       {
+        "Fn::Contains": [
+         [
+          "1",
+          "2",
+          "3",
+          "4",
+          "5"
+         ],
+         {
+          "Ref": "BootstrapVersion"
+         }
+        ]
+       }
+      ]
+     },
+     "AssertDescription": "CDK bootstrap stack version 6 required. Please run 'cdk bootstrap' with a recent version of the CDK CLI."
+    }
+   ]
+  }
+ }
+}
