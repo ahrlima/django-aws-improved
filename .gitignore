@@ -152,6 +152,11 @@ cdk.out/
 .DS_Store
 Thumbs.db
 
+# SQLite databases
+*.sqlite3
+*.sqlite3-journal
+app/db.sqlite3
+
 # Environment files
 .env*
 !.env.example
