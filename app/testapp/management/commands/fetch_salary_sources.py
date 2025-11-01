@@ -4,6 +4,7 @@ from pathlib import Path
 from typing import Iterable, Optional
 from urllib.error import URLError
 from urllib.request import Request, urlopen
+from urllib.parse import urlparse
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -31,6 +32,13 @@ def _resolve_sources(config_path: Path, output_dir: Path) -> Iterable[SalarySour
         destination_path = Path(destination_raw)
         if not destination_path.is_absolute():
             destination_path = output_dir / destination_path
+
+        url = str(url)
+        parsed = urlparse(url)
+        if not parsed.scheme:
+            # Treat URLs without a scheme as filesystem paths relative to the config file.
+            local_path = (config_path.parent / url).resolve()
+            url = local_path.as_uri()
 
         headers = entry.get("headers")
         yield SalarySource(
