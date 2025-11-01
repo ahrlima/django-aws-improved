@@ -91,7 +91,7 @@ class Command(BaseCommand):
             try:
                 with urlopen(request, timeout=timeout) as response:
                     data = response.read()
-            except URLError as exc:
+            except (URLError, TimeoutError) as exc:
                 self.stderr.write(
                     self.style.ERROR(f"[{source.name}] failed to download: {exc}")
                 )

@@ -2,9 +2,11 @@ import csv
 import json
 import tempfile
 from pathlib import Path
+from unittest.mock import patch
 
 from django.core.cache import cache
 from django.core.management import call_command
+from django.core.management.base import CommandError
 from django.test import Client, SimpleTestCase, TestCase
 
 from .models import SalaryObservation, SalaryRoleAggregate
@@ -243,6 +245,19 @@ class FetchSalarySourcesCommandTests(SimpleTestCase):
         downloaded_file = output_dir / "sample_downloaded.csv"
         self.assertTrue(downloaded_file.exists())
         self.assertEqual(downloaded_file.read_text(encoding="utf-8"), "col\nvalue\n")
+
+    def test_reports_timeout_as_command_error(self):
+        output_dir = self.source_dir / "output"
+        with patch(
+            "testapp.management.commands.fetch_salary_sources.urlopen",
+            side_effect=TimeoutError("timeout"),
+        ):
+            with self.assertRaisesRegex(CommandError, "No sources were downloaded"):
+                call_command(
+                    "fetch_salary_sources",
+                    config=str(self.config_path),
+                    output_dir=str(output_dir),
+                )
 
 
 class LoadSalaryDatasetCommandTests(TestCase):
