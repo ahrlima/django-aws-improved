@@ -27,6 +27,13 @@ jobs:
         run: |
           python -m pip install --upgrade pip
           pip install -r requirements.txt
+      
+      - name: Debug salary sources
+        run: |
+          pwd
+          ls ..
+          cat ../config/salary_sources.json
+        working-directory: app
 
       - name: Fetch raw salary sources
         run: python manage.py fetch_salary_sources
