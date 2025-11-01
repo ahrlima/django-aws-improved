@@ -91,7 +91,7 @@ python manage.py load_salary_dataset
 ```
 
 How it works:
-- `config/salary_sources.json` lists remote datasets to download (URL, destination, optional headers). Update it with real endpoints before running `fetch_salary_sources`. The command stores the files under `data/raw/` at the repository root (the default paths are computed from `BASE_DIR`).
+- `config/salary_sources.json` lists datasets to ingest (URL, destination, optional headers). URLs can be remote (`https://...`) or relative paths (resolved from the JSON file). The command stores the files under `data/raw/` at the repository root (the default paths are computed from `BASE_DIR`).
 - Drop additional CSV files directly into `data/raw/` if you acquire data manually. Check `data/raw/sample_salaries.csv` for a minimal reference.
 - `build_salary_dataset` normalizes column names (aliases such as `job_title`, `experience_level`, `salary_min`, `remote_type`, `remote_ratio`), standardises text casing, filters by country (defaults to Brazil), and deduplicates rows (`source`, `role`, `level`, `location`, `state`, `work_model`, salary figures).
 - `load_salary_dataset` flushes the `SalaryObservation` table, repopulates it from the canonical CSV, and rebuilds cached aggregates per role. API endpoints now serve the cached payload when no extra filters are provided, speeding up repeated queries.
