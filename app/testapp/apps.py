@@ -17,6 +17,7 @@ class TestappConfig(AppConfig):
 
     def ready(self):
         post_migrate.connect(self._ensure_dataset_loaded, sender=self)
+        self._ensure_dataset_loaded()
 
     def _ensure_dataset_loaded(self, **kwargs):
         if not getattr(settings, "AUTOLOAD_SALARY_DATASET", False):
