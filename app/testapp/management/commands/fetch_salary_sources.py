@@ -3,8 +3,8 @@ from dataclasses import dataclass
 from pathlib import Path
 from typing import Iterable, Optional
 from urllib.error import URLError
+from urllib.parse import unquote, urlparse
 from urllib.request import Request, urlopen
-from urllib.parse import urlparse
 
 from django.conf import settings
 from django.core.management.base import BaseCommand, CommandError
@@ -16,6 +16,7 @@ class SalarySource:
     url: str
     destination: Path
     headers: Optional[dict]
+    local_path: Optional[Path]
 
 
 def _resolve_sources(config_path: Path, output_dir: Path) -> Iterable[SalarySource]:
@@ -33,12 +34,14 @@ def _resolve_sources(config_path: Path, output_dir: Path) -> Iterable[SalarySour
         if not destination_path.is_absolute():
             destination_path = output_dir / destination_path
 
+        local_path: Optional[Path] = None
         url = str(url)
         parsed = urlparse(url)
         if not parsed.scheme:
-            # Treat URLs without a scheme as filesystem paths relative to the config file.
             local_path = (config_path.parent / url).resolve()
             url = local_path.as_uri()
+        elif parsed.scheme == "file":
+            local_path = Path(unquote(parsed.path))
 
         headers = entry.get("headers")
         yield SalarySource(
@@ -46,6 +49,7 @@ def _resolve_sources(config_path: Path, output_dir: Path) -> Iterable[SalarySour
             url=url,
             destination=destination_path,
             headers=headers if isinstance(headers, dict) else None,
+            local_path=local_path,
         )
 
 
@@ -94,16 +98,25 @@ class Command(BaseCommand):
 
         for source in _resolve_sources(config_path, output_dir):
             source.destination.parent.mkdir(parents=True, exist_ok=True)
-            request = Request(source.url, headers=source.headers or {})
+            if source.local_path:
+                try:
+                    data = source.local_path.read_bytes()
+                except OSError as exc:
+                    self.stderr.write(
+                        self.style.ERROR(f"[{source.name}] failed to read {source.local_path}: {exc}")
+                    )
+                    continue
+            else:
+                request = Request(source.url, headers=source.headers or {})
 
-            try:
-                with urlopen(request, timeout=timeout) as response:
-                    data = response.read()
-            except (URLError, TimeoutError) as exc:
-                self.stderr.write(
-                    self.style.ERROR(f"[{source.name}] failed to download: {exc}")
-                )
-                continue
+                try:
+                    with urlopen(request, timeout=timeout) as response:
+                        data = response.read()
+                except (URLError, TimeoutError) as exc:
+                    self.stderr.write(
+                        self.style.ERROR(f"[{source.name}] failed to download: {exc}")
+                    )
+                    continue
 
             with source.destination.open("wb") as handle:
                 handle.write(data)

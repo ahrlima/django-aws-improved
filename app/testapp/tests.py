@@ -222,7 +222,7 @@ class FetchSalarySourcesCommandTests(SimpleTestCase):
             "sources": [
                 {
                     "name": "sample",
-                    "url": self.sample_csv.resolve().as_uri(),
+                    "url": "sample.csv",
                     "dest": "sample_downloaded.csv",
                 }
             ]
@@ -246,8 +246,38 @@ class FetchSalarySourcesCommandTests(SimpleTestCase):
         self.assertTrue(downloaded_file.exists())
         self.assertEqual(downloaded_file.read_text(encoding="utf-8"), "col\nvalue\n")
 
+    def test_supports_file_uri_sources(self):
+        output_dir = self.source_dir / "output"
+        file_uri_config = {
+            "sources": [
+                {
+                    "name": "sample",
+                    "url": self.sample_csv.resolve().as_uri(),
+                    "dest": "sample_downloaded.csv",
+                }
+            ]
+        }
+        self.config_path.write_text(json.dumps(file_uri_config), encoding="utf-8")
+        call_command(
+            "fetch_salary_sources",
+            config=str(self.config_path),
+            output_dir=str(output_dir),
+        )
+        self.assertTrue((output_dir / "sample_downloaded.csv").exists())
+
     def test_reports_timeout_as_command_error(self):
         output_dir = self.source_dir / "output"
+        # Reconfigure source to mimic a remote URL so urlopen is exercised.
+        remote_config = {
+            "sources": [
+                {
+                    "name": "sample",
+                    "url": "https://example.com/sample.csv",
+                    "dest": "sample_downloaded.csv",
+                }
+            ]
+        }
+        self.config_path.write_text(json.dumps(remote_config), encoding="utf-8")
         with patch(
             "testapp.management.commands.fetch_salary_sources.urlopen",
             side_effect=TimeoutError("timeout"),
