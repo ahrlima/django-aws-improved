@@ -154,8 +154,19 @@ Workflow stages:
 2. Set up Python 3.10, upgrade `pip`, and install the dependencies from `app/requirements.txt`.
 3. Run `python manage.py test` (SQLite backend) to ensure the Django API behaves as expected.
 4. Build the Docker image (`docker build ./app`) as a final smoke check for the container layer.
+5. On pushes to `main`, `deploy-dev` assumes the AWS deploy role via OIDC and runs `cdk deploy` for `NetworkStack-dev`, `DataStack-dev`, and `AppStack-dev`. If you provide the optional `ECR_REPOSITORY` secret, the job also builds and pushes `./app` to Amazon ECR and passes the image tag to the CDK context (`-c imageTag=<sha>`). Omitting the secret keeps the default CDK asset flow (`buildOnDeploy=true`).
 
 To extend the pipeline (publish artefacts to ECR, trigger CDK deploys, etc.), add a follow-up job or extra steps that depend on the `build-test` job once it succeeds.
+
+### Continuous deployment setup
+Before the deploy job can assume AWS credentials you must:
+
+1. Create an IAM role that trusts `arn:aws:iam::${ACCOUNT_ID}:oidc-provider/token.actions.githubusercontent.com` and allows the required actions (`sts:AssumeRole`, `cloudformation:*`, `ecs:*`, `iam:PassRole`, `ecr:*`, etc. as appropriate for your stacks). Limit the trust policy to this repository (`repo:<owner>/<repo>:ref:refs/heads/main`).
+2. Add `AWS_DEPLOY_ROLE_ARN` as a repository secret containing that role ARN.
+3. (Optional) When deploying environments with `buildOnDeploy=false`, add `ECR_REPOSITORY` (e.g. `django-app`) so the workflow can `docker push` before invoking CDK.
+4. Adjust the default environment by editing `DEPLOY_ENV`, `AWS_REGION`, or `CDK_STACKS` in `.github/workflows/ci.yml` if you need to target a different stage.
+
+With these secrets configured, every merge to `main` automatically rolls out the latest application revision to ECS.
 
 ## Cost Awareness Summary
 - **RDS t3.micro**: covered by Free Tier (up to 750 hours)
